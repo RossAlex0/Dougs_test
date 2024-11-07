@@ -13,6 +13,11 @@ export const toastStyle = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: padding.large,
     paddingVertical: padding.small,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 24,
+    elevation: 10,
   },
   container_text: {
     display: "flex",

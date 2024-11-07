@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { colors } from "../../style/globalsStyle";
 import { toastStyle } from "./style";
 
-export default function Toast() {
+export default function Toast({ onPress }: { onPress: () => void }) {
   return (
     <View style={toastStyle.container}>
       <View style={toastStyle.container_text}>
@@ -15,7 +15,7 @@ export default function Toast() {
         />
         <Text style={toastStyle.text}>Modification enregistrée</Text>
       </View>
-      <Pressable>
+      <Pressable onPress={onPress}>
         <Icon name="close-outline" size={16} color={colors.white_color} />
       </Pressable>
     </View>
