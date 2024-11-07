@@ -19,7 +19,7 @@ export const radius = {
 export const padding = {
   small: 4,
   regular: 8,
-  medium: 8,
+  medium: 12,
   large: 16,
   Xlarge: 24,
 };
