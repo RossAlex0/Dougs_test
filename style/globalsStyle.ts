@@ -3,6 +3,8 @@ export const colors = {
   primary_color700: "#013A51",
   green500: "#00BB81",
   gray: "#636970",
+  lightGray: "#F3F5F8",
+  neutralGray: "#354A61",
   gray300: "#DCE4ED",
   gray325: "#B3BBC0",
   white_color: "#FFFFFF",
