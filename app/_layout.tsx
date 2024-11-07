@@ -3,6 +3,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { DetailCategoryProvider } from "../services/context/detailCategoryContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,7 +26,9 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Slot />
+      <DetailCategoryProvider>
+        <Slot />
+      </DetailCategoryProvider>
     </SafeAreaView>
   );
 }

@@ -13,9 +13,7 @@ export default function Input({ tools }: InputInterface) {
         placeholderTextColor={colors.gray325}
         returnKeyType={tools.keyType}
         keyboardType={tools.keyboardType}
-        // onFocus={() => tools.setIsFocuse && tools.setIsFocuse(true)}
-        // onSubmitEditing={() => tools.setIsFocuse && tools.setIsFocuse(false)}
-        // onChangeText={tools.setOnChange}
+        onChangeText={tools.setOnChange}
         style={[
           inputStyle.input,
           { paddingLeft: tools.keyboardType === "default" ? 32 : 16 },
@@ -31,12 +29,7 @@ export default function Input({ tools }: InputInterface) {
       ) : (
         <>
           <Text style={inputStyle.label}>Montant</Text>
-          <Icon
-            name="logo-euro"
-            size={18}
-            color={colors.primary_color700}
-            style={inputStyle.euros}
-          />
+          <Text style={inputStyle.euros}>€</Text>
         </>
       )}
     </View>

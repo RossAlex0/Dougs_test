@@ -16,7 +16,13 @@ export const inputStyle = StyleSheet.create({
     fontFamily: "text_regular",
   },
   search: { position: "absolute", left: 8, top: 13.5 },
-  euros: { position: "absolute", right: 8, top: 13.5 },
+  euros: {
+    position: "absolute",
+    right: 16,
+    top: 8,
+    fontSize: 21,
+    color: colors.primary_color700,
+  },
   label: {
     position: "absolute",
     left: 16,
