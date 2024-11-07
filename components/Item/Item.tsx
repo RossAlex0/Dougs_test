@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { useEffect, useState } from "react";
 
 import Tag from "../Tag/Tag";
@@ -8,6 +8,7 @@ import { getCategoriesGroupsByOperation } from "../../services/request/get";
 
 import { itemStyle } from "./style";
 import { colors } from "../../style/globalsStyle";
+import { router } from "expo-router";
 
 interface OperationProps {
   operation: Operation;
@@ -25,14 +26,20 @@ export default function Item({ operation }: OperationProps) {
   }, []);
 
   return (
-    <View style={itemStyle.container}>
+    <Pressable
+      onPress={() => router.push(`../Details/${operation.id}`)}
+      style={[
+        itemStyle.container,
+        { height: operation.description !== "" ? 101 : 81 },
+      ]}
+    >
       <View style={itemStyle.top_box}>
         <Text
           style={itemStyle.top_box_label}
           numberOfLines={1}
           ellipsizeMode="tail"
         >
-          {operation.label}{" "}
+          {operation.label}
         </Text>
         <Text
           style={[
@@ -45,19 +52,26 @@ export default function Item({ operation }: OperationProps) {
             },
           ]}
         >
-          {operation.amount} €
+          {operation.amount < 0
+            ? `${Math.abs(operation.amount)} €`
+            : `+ ${operation.amount} €`}
         </Text>
       </View>
       <View style={itemStyle.bottom_box}>
         <Text
-          style={itemStyle.bottom_box_description}
+          style={[
+            itemStyle.bottom_box_description,
+            { display: operation.description === "" ? "none" : "flex" },
+          ]}
           numberOfLines={1}
           ellipsizeMode="tail"
         >
           {operation.description}
         </Text>
-        <Tag categoryGroup={categoryGroupData} />
+        <View style={operation.description === "" && itemStyle.test}>
+          <Tag categoryGroup={categoryGroupData} />
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
