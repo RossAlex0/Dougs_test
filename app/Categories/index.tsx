@@ -16,7 +16,6 @@ export default function Categories() {
   const { detailsValue, setDetailsValue, setGroupId } = useContext(
     DetailCategoryContext
   ) as DetailContext;
-  console.info(detailsValue);
   const [categoriesData, setCategoriesData] = useState<
     StateCategories[] | null
   >();
@@ -62,9 +61,9 @@ export default function Categories() {
       </View>
       <View style={categoryStyle.filter}>
         <Text style={categoryStyle.filter_text}>Trier par</Text>
-        {filterOptions.map((option) => (
+        {filterOptions.map((option, index) => (
           <Pressable
-            key={option}
+            key={index}
             style={[
               categoryStyle.filter_btn,
               {
@@ -88,6 +87,7 @@ export default function Categories() {
       <ScrollView>
         {categoriesData?.map((catGroup) => (
           <Pressable
+            key={catGroup.name}
             onPress={() => handleClickCategory(catGroup.categories[0].groupId)}
           >
             <View
