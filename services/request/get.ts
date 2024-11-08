@@ -5,6 +5,7 @@ import {
   ObjectCategories,
   Operation,
   StateCategories,
+  Stats,
 } from "../type/types";
 import { formateOneDate } from "../utils/formatDate";
 import { myAxios } from "./axiosInstance";
@@ -157,22 +158,20 @@ export const getAllCategories = async (
 // ** OPERATIONS QUERRY SEARCH ** \\
 
 export const getOperationsWithQuery = (
-  setter: (state: Operation[]) => void,
   limit: number,
-  search?: string,
-  offset?: number
+  offset: number = 0,
+  search?: string
 ) => {
-  let query;
-  if (search && offset) {
-    query = `offset=${offset}&search=${search}&limit=${limit}`;
-  } else if (search) {
-    query = `search=${search}&limit=${limit}`;
-  } else if (offset) {
-    query = `offset=${offset}&limit=${limit}`;
+  let query = `&limit=${limit}`;
+  if (search) {
+    query += `&search=${search}`;
+  }
+  if (offset !== undefined) {
+    query += `&offset=${offset}`;
   }
 
-  myAxios
+  return myAxios
     .get(`/operations?${query}`)
-    .then((response) => setter(response.data))
+    .then((response) => response.data)
     .catch((error) => console.error(error));
 };

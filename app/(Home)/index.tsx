@@ -20,38 +20,48 @@ export default function Home() {
   const [operationsData, setOperationsData] = useState<
     Operation[] | undefined
   >();
-  const [refreshing, setRefreshing] = useState(false);
-  const [searchOperationsData, setSearchOperationsData] = useState<
-    Operation[] | undefined
-  >();
 
-  const getHomeData = async () => {
-    const [stats, operations] = await Promise.all([
-      getOperationsStats(),
-      getAllOperations(),
-    ]);
-    setStatsData(stats);
-    setOperationsData(operations);
-  };
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchWithInput, setSearchWithInput] = useState(false);
+  const [offset, setOffset] = useState(10);
 
   useEffect(() => {
-    getHomeData();
+    const getData = async () => {
+      const [stats, operations] = await Promise.all([
+        getOperationsStats(),
+        getOperationsWithQuery(10, 0),
+      ]);
+      setStatsData(stats);
+      setOperationsData(operations);
+    };
+    getData();
   }, []);
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setSearchOperationsData(undefined);
-    setInputValue(undefined);
-    getHomeData().finally(() => setRefreshing(false));
+    const operation = await getOperationsWithQuery(10, 0);
+    setOperationsData(operation);
+    setSearchWithInput(false);
+    setTimeout(() => setRefreshing(false), 800);
   }, []);
 
-  const operationListByDate = searchOperationsData
-    ? groupByDate(searchOperationsData)
-    : operationsData && groupByDate(operationsData);
-
-  const handleSubmitSearch = () => {
-    getOperationsWithQuery(setSearchOperationsData, 10, inputValue, 0);
+  const handleSubmitSearch = async () => {
+    if (inputValue !== "") {
+      const operations = await getOperationsWithQuery(10, 0, inputValue);
+      setOperationsData(operations);
+      setSearchWithInput(true);
+      setInputValue("");
+    }
   };
+  const handleScrollList = async () => {
+    if (operationsData) {
+      const operations = await getOperationsWithQuery(10, offset);
+      setOperationsData([...operationsData, ...operations]);
+      setOffset((prev) => prev + 10);
+    }
+  };
+
+  const operationListByDate = operationsData && groupByDate(operationsData);
 
   return (
     <View style={homeStyle.container}>
@@ -96,9 +106,9 @@ export default function Home() {
       {operationListByDate && (
         <FlatList
           data={Object.keys(operationListByDate)}
-          keyExtractor={(item) => item}
+          keyExtractor={(index) => index.toString()}
           renderItem={({ item: date }) => (
-            <View>
+            <View key={date}>
               <View style={homeStyle.body_date}>
                 <Text>{date}</Text>
               </View>
@@ -116,6 +126,8 @@ export default function Home() {
               progressBackgroundColor={colors.primary_color}
             />
           }
+          onEndReached={() => !searchWithInput && handleScrollList()}
+          onEndReachedThreshold={0.1}
           style={homeStyle.container_body}
         />
       )}
