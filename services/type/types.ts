@@ -44,14 +44,20 @@ export interface StateDetail {
 
 export interface DetailContext {
   detailsValue: StateDetail | null;
+  detaitGrpCategory: CategoriesGroup | null;
   setDetailsValue: (state: StateDetail) => void;
+  setGroupId: (state: number) => void;
 }
 
-export interface StateCategories {
+export interface ObjectCategories {
   id: number;
   label: string;
   description: string;
   groupId: number;
-  groupLabel: string;
-  groupColor: string;
+}
+
+export interface StateCategories {
+  name: string;
+  color: string;
+  categories: ObjectCategories[];
 }
