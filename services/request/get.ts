@@ -2,6 +2,7 @@ import {
   CategoriesGroup,
   Category,
   DetailInterface,
+  ObjectCategories,
   Operation,
   StateCategories,
   Stats,
@@ -35,6 +36,24 @@ export const getCategoriesGroupsByOperation = async (
   }
   const categoryGroup = categoriesGroups.find(
     (cat: CategoriesGroup) => cat.id === category.groupId
+  );
+
+  setter(categoryGroup);
+};
+
+// ** CATEGORY GROUP BY ID ** \\
+
+export const getCategoryGroupById = async (
+  setter: (state: CategoriesGroup) => void,
+  id: number
+) => {
+  const categoriesGroups = await myAxios
+    .get("/categories-groups")
+    .then((response) => response.data)
+    .catch((error) => console.info(error));
+
+  const categoryGroup = categoriesGroups.find(
+    (cat: CategoriesGroup) => cat.id === id
   );
 
   setter(categoryGroup);
@@ -103,34 +122,35 @@ export const getAllOperations = () => {
 // ** ALL CATEGORIES ** \\
 
 export const getAllCategories = async (
-  setter: (state: StateCategories) => void
+  setter: (state: StateCategories[]) => void,
+  order?: "A-Z" | "Z-A"
 ) => {
-  const categories = await myAxios
-    .get("/categories")
-    .then((response) => response.data)
-    .catch((error) => console.error(error));
+  const [categories, categoriesGroups] = await Promise.all([
+    myAxios.get("/categories").then((res) => res.data),
+    myAxios.get("/categories-groups").then((res) => res.data),
+  ]);
 
-  const categoriesGroups = await myAxios
-    .get("/categories-groups")
-    .then((response) => response.data)
-    .catch((error) => console.info(error));
+  let result = categoriesGroups.map((group: CategoriesGroup) => {
+    const groupLabel = group.label;
+    const groupColor = group.color;
 
-  const response = categories.map((cat: Category) => {
-    const categoryGroup = categoriesGroups.find(
-      (catGrp: CategoriesGroup) => catGrp.id === cat.groupId
+    const groupCategories = categories.filter(
+      (cat: ObjectCategories) => cat.groupId === group.id
     );
 
-    if (!categoryGroup) {
-      return cat;
-    }
-    return {
-      ...cat,
-      groupLabel: categoryGroup.label,
-      groupColor: categoryGroup.color,
-    };
+    return { name: groupLabel, color: groupColor, categories: groupCategories };
   });
 
-  if (response) {
-    setter(response);
+  if (order === "A-Z") {
+    result = result.sort((groupA: StateCategories, groupB: StateCategories) => {
+      return groupA.name.localeCompare(groupB.name);
+    });
   }
+  if (order === "Z-A") {
+    result = result.sort((groupA: StateCategories, groupB: StateCategories) => {
+      return groupB.name.localeCompare(groupA.name);
+    });
+  }
+
+  setter(result);
 };
