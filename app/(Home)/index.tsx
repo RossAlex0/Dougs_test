@@ -1,17 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  SafeAreaView,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, Text, View } from "react-native";
 import Input from "../../components/Input/Input";
 import Item from "../../components/Item/Item";
 import { Operation, Stats } from "../../services/type/types";
 import {
   getAllOperations,
   getOperationsStats,
+  getOperationsWithQuery,
 } from "../../services/request/get";
 import { numberWithSpace } from "../../services/utils/formatNumber";
 import { groupByDate } from "../../services/utils/formatDate";
@@ -20,12 +15,15 @@ import { homeStyle } from "./style";
 import { colors } from "../../style/globalsStyle";
 
 export default function Home() {
-  const [inputValue, SetInputValue] = useState<string | undefined>(undefined);
+  const [inputValue, setInputValue] = useState<string | undefined>(undefined);
   const [statsData, setStatsData] = useState<Stats | undefined>();
   const [operationsData, setOperationsData] = useState<
     Operation[] | undefined
   >();
   const [refreshing, setRefreshing] = useState(false);
+  const [searchOperationsData, setSearchOperationsData] = useState<
+    Operation[] | undefined
+  >();
 
   const getHomeData = async () => {
     const [stats, operations] = await Promise.all([
@@ -42,10 +40,18 @@ export default function Home() {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    setSearchOperationsData(undefined);
+    setInputValue(undefined);
     getHomeData().finally(() => setRefreshing(false));
   }, []);
 
-  const operationListByDate = operationsData && groupByDate(operationsData);
+  const operationListByDate = searchOperationsData
+    ? groupByDate(searchOperationsData)
+    : operationsData && groupByDate(operationsData);
+
+  const handleSubmitSearch = () => {
+    getOperationsWithQuery(setSearchOperationsData, 10, inputValue, 0);
+  };
 
   return (
     <View style={homeStyle.container}>
@@ -56,6 +62,8 @@ export default function Home() {
             placeholder: "Rechercher un élément",
             keyType: "search",
             keyboardType: "default",
+            onSubmitEditing: () => handleSubmitSearch(),
+            setOnChange: (value) => setInputValue(value),
           }}
         />
         <View style={homeStyle.header_stats}>
