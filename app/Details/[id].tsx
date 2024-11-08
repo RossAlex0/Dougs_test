@@ -7,11 +7,7 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 
 import { getOperationDetailById } from "../../services/request/get";
-import {
-  DetailContext,
-  DetailInterface,
-  StateDetail,
-} from "../../services/type/types";
+import { DetailContext, DetailInterface } from "../../services/type/types";
 
 import { detailStyle } from "./style";
 import { colors } from "../../style/globalsStyle";
@@ -19,10 +15,11 @@ import { colorToHex } from "../../services/utils/colorNameToHex";
 import { putOperation } from "../../services/request/put";
 import Toast from "../../components/Toast/Toast";
 import { DetailCategoryContext } from "../../services/context/detailCategoryContext";
+import ButtonTag from "../../components/ButtonTag/ButtonTag";
 
 export default function Details() {
   const { id } = useLocalSearchParams();
-  const { detailsValue, setDetailsValue } = useContext(
+  const { detaitGrpCategory, detailsValue, setDetailsValue } = useContext(
     DetailCategoryContext
   ) as DetailContext;
 
@@ -68,7 +65,7 @@ export default function Details() {
         <Pressable onPress={() => router.back()}>
           <Icon
             name="chevron-back-outline"
-            size={24}
+            size={32}
             color={colors.primary_color700}
           />
         </Pressable>
@@ -101,37 +98,19 @@ export default function Details() {
           />
           <Text style={detailStyle.body_box_label}>Description</Text>
         </View>
-        <Pressable
-          style={[
-            detailStyle.body_category_btn,
-            {
-              backgroundColor:
-                detailData?.category_color &&
-                `${colorToHex(detailData.category_color)}`,
-            },
-            { borderWidth: detailData ? 0 : 1 },
-            { borderColor: detailData ? "none" : colors.gray300 },
-          ]}
-          onPress={() => router.push("../Categories/")}
-        >
-          <Text
-            style={[
-              detailStyle.body_category_text,
-              {
-                color: detailData
-                  ? detailData.category_color
-                  : colors.title_color,
-              },
-            ]}
-          >
-            {detailData?.category_label}
-          </Text>
-          <Icon
-            name="chevron-forward-outline"
-            size={16}
-            color={colors.primary_color700}
+        {detailData && (
+          <ButtonTag
+            data={
+              detaitGrpCategory
+                ? detaitGrpCategory
+                : detailData && {
+                    id: detailData.categoryGrp_id,
+                    color: detailData.category_color,
+                    label: detailData.category_label,
+                  }
+            }
           />
-        </Pressable>
+        )}
         <View style={detailStyle.button_register}>
           <Button onPress={handlePressToUpdate} />
         </View>
