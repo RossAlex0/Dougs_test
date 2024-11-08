@@ -14,6 +14,7 @@ export default function Input({ tools }: InputInterface) {
         returnKeyType={tools.keyType}
         keyboardType={tools.keyboardType}
         onChangeText={tools.setOnChange}
+        onSubmitEditing={tools.onSubmitEditing}
         style={[
           inputStyle.input,
           { paddingLeft: tools.keyboardType === "default" ? 32 : 16 },
@@ -42,7 +43,8 @@ interface InputInterface {
     placeholder: string;
     keyType: "done" | "search";
     keyboardType: "numeric" | "default";
+    onSubmitEditing?: () => void;
     setIsFocuse?: (value: boolean) => void;
-    setOnChange?: (value: any) => void;
+    setOnChange: (value: any) => void;
   };
 }
