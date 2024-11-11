@@ -16,11 +16,12 @@ export default function Categories() {
   const { detailsValue, setDetailsValue, setGroupId } = useContext(
     DetailCategoryContext
   ) as DetailContext;
+
   const [categoriesData, setCategoriesData] = useState<
     StateCategories[] | null
   >();
-  const [filterSelect, setFilterSelect] = useState("Groupes");
 
+  const [filterSelect, setFilterSelect] = useState("Groupes");
   const filterOptions = ["Groupes", "A-Z", "Z-A"] as const;
 
   useEffect(() => {
