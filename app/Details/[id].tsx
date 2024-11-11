@@ -5,25 +5,26 @@ import { Modal, Pressable, Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
+import Toast from "../../components/Toast/Toast";
+import ButtonTag from "../../components/ButtonTag/ButtonTag";
 
 import { getOperationDetailById } from "../../services/request/get";
 import { DetailContext, DetailInterface } from "../../services/type/types";
+import { putOperation } from "../../services/request/put";
+import { DetailCategoryContext } from "../../services/context/detailCategoryContext";
 
 import { detailStyle } from "./style";
 import { colors } from "../../style/globalsStyle";
-import { colorToHex } from "../../services/utils/colorNameToHex";
-import { putOperation } from "../../services/request/put";
-import Toast from "../../components/Toast/Toast";
-import { DetailCategoryContext } from "../../services/context/detailCategoryContext";
-import ButtonTag from "../../components/ButtonTag/ButtonTag";
 
 export default function Details() {
   const { id } = useLocalSearchParams();
+
   const { detaitGrpCategory, detailsValue, setDetailsValue } = useContext(
     DetailCategoryContext
   ) as DetailContext;
 
   const [detailData, setDetailData] = useState<DetailInterface | null>();
+
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
   useEffect(() => {
@@ -45,9 +46,7 @@ export default function Details() {
       const response = await putOperation(parseInt(id[0]), detailsValue);
       if (response !== 400 && response !== 404) {
         setModalIsVisible(true);
-        setTimeout(() => {
-          setModalIsVisible(false);
-        }, 12000);
+        setTimeout(() => setModalIsVisible(false), 12000);
       }
     }
   };
