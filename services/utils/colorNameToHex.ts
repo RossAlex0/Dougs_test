@@ -1,3 +1,4 @@
+// Transform the color from the data into the background color
 export const colorToHex = (color: string): string => {
   if (color === "blue") {
     return "#D1ECFF";

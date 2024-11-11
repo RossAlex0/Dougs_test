@@ -1,5 +1,6 @@
 import { Operation } from "../type/types";
 
+// Convert date data into a formatted text string
 export const groupByDate = (operations: Operation[]) => {
   return operations.reduce(
     (operationDate: { [key: string]: Operation[] }, operation: Operation) => {

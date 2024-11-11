@@ -5,7 +5,6 @@ import {
   ObjectCategories,
   Operation,
   StateCategories,
-  Stats,
 } from "../type/types";
 import { formateOneDate } from "../utils/formatDate";
 import { myAxios } from "./axiosInstance";
@@ -15,7 +14,7 @@ import { myAxios } from "./axiosInstance";
 export const getCategoriesGroupsByOperation = async (
   id: number,
   setter: (state: CategoriesGroup) => void
-): Promise<CategoriesGroup | undefined> => {
+) => {
   const categories = await myAxios
     .get("/categories")
     .then((response) => response.data)
@@ -24,6 +23,7 @@ export const getCategoriesGroupsByOperation = async (
   const category = categories.find((cat: Category) => cat.id === id);
   if (!category) {
     console.info("Aucune categorie trouvée.");
+    return [];
   }
 
   const categoriesGroups = await myAxios
@@ -32,7 +32,7 @@ export const getCategoriesGroupsByOperation = async (
     .catch((error) => console.info(error));
 
   if (!categoriesGroups) {
-    return undefined;
+    return [];
   }
   const categoryGroup = categoriesGroups.find(
     (cat: CategoriesGroup) => cat.id === category.groupId
@@ -83,6 +83,10 @@ export const getOperationDetailById = async (
     .get("/categories-groups")
     .then((response) => response.data)
     .catch((error) => console.info(error));
+
+  if (!categories || !categoriesGroups || !operation) {
+    return [];
+  }
 
   const categoryGroup: CategoriesGroup = categoriesGroups.find(
     (cat: CategoriesGroup) => cat.id === category.groupId

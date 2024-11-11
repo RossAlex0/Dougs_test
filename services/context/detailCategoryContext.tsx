@@ -1,4 +1,5 @@
-import React, { createContext, useState, useMemo, useEffect } from "react";
+import { createContext, useState, useMemo, useEffect } from "react";
+
 import { CategoriesGroup, DetailContext, StateDetail } from "../type/types";
 import { getCategoryGroupById } from "../request/get";
 
