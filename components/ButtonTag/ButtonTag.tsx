@@ -2,6 +2,7 @@ import { Pressable, Text } from "react-native";
 import { router } from "expo-router";
 
 import Icon from "react-native-vector-icons/Ionicons";
+
 import { CategoriesGroup } from "../../services/type/types";
 import { colorToHex } from "../../services/utils/colorNameToHex";
 
