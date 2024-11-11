@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
+
 import Input from "../../components/Input/Input";
 import Item from "../../components/Item/Item";
+
 import { Operation, Stats } from "../../services/type/types";
 import {
-  getAllOperations,
   getOperationsStats,
   getOperationsWithQuery,
 } from "../../services/request/get";
@@ -16,6 +17,7 @@ import { colors } from "../../style/globalsStyle";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState<string | undefined>(undefined);
+
   const [statsData, setStatsData] = useState<Stats | undefined>();
   const [operationsData, setOperationsData] = useState<
     Operation[] | undefined
@@ -23,6 +25,7 @@ export default function Home() {
 
   const [refreshing, setRefreshing] = useState(false);
   const [searchWithInput, setSearchWithInput] = useState(false);
+
   const [offset, setOffset] = useState(10);
 
   useEffect(() => {
@@ -53,6 +56,7 @@ export default function Home() {
       setInputValue("");
     }
   };
+
   const handleScrollList = async () => {
     if (operationsData) {
       const operations = await getOperationsWithQuery(10, offset);
@@ -62,6 +66,16 @@ export default function Home() {
   };
 
   const operationListByDate = operationsData && groupByDate(operationsData);
+
+  const statsBoxData = [
+    {
+      label: "Crédit",
+      color: colors.title_color,
+      amount: statsData?.incomesTotal || 0,
+    },
+    { label: "Débit", color: "#FD755F", amount: statsData?.outcomesTotal || 0 },
+    { label: "Solde", color: "#0ED094", amount: statsData?.balanceTotal || 0 },
+  ];
 
   return (
     <View style={homeStyle.container}>
@@ -77,30 +91,16 @@ export default function Home() {
           }}
         />
         <View style={homeStyle.header_stats}>
-          {statsData && (
+          {statsBoxData.map((stat) => (
             <>
               <View style={homeStyle.stats_box}>
-                <Text
-                  style={[homeStyle.stats_nb, { color: colors.title_color }]}
-                >
-                  {numberWithSpace(Math.ceil(statsData.incomesTotal))} €
+                <Text style={[homeStyle.stats_nb, { color: stat.color }]}>
+                  {numberWithSpace(Math.ceil(stat.amount))} €
                 </Text>
-                <Text style={homeStyle.stats_label}>Crédit</Text>
-              </View>
-              <View style={homeStyle.stats_box}>
-                <Text style={[homeStyle.stats_nb, { color: "#FD755F" }]}>
-                  {numberWithSpace(Math.ceil(statsData.outcomesTotal))} €
-                </Text>
-                <Text style={homeStyle.stats_label}>Débit</Text>
-              </View>
-              <View style={homeStyle.stats_box}>
-                <Text style={[homeStyle.stats_nb, { color: "#0ED094" }]}>
-                  {numberWithSpace(Math.ceil(statsData.balanceTotal))} €
-                </Text>
-                <Text style={homeStyle.stats_label}>Solde</Text>
+                <Text style={homeStyle.stats_label}>{stat.label}</Text>
               </View>
             </>
-          )}
+          ))}
         </View>
       </View>
       {operationListByDate && (

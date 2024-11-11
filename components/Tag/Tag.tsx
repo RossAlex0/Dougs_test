@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { Text, Pressable } from "react-native";
 
 import { CategoriesGroup } from "../../services/type/types";
 import { colorToHex } from "../../services/utils/colorNameToHex";

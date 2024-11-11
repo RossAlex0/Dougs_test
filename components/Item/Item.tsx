@@ -1,5 +1,6 @@
 import { View, Text, Pressable } from "react-native";
 import { useEffect, useState } from "react";
+import { router } from "expo-router";
 
 import Tag from "../Tag/Tag";
 
@@ -8,7 +9,6 @@ import { getCategoriesGroupsByOperation } from "../../services/request/get";
 
 import { itemStyle } from "./style";
 import { colors } from "../../style/globalsStyle";
-import { router } from "expo-router";
 
 interface OperationProps {
   operation: Operation;
