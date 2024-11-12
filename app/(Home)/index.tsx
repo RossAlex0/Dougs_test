@@ -92,14 +92,12 @@ export default function Home() {
         />
         <View style={homeStyle.header_stats}>
           {statsBoxData.map((stat) => (
-            <>
-              <View style={homeStyle.stats_box}>
-                <Text style={[homeStyle.stats_nb, { color: stat.color }]}>
-                  {numberWithSpace(Math.ceil(stat.amount))} €
-                </Text>
-                <Text style={homeStyle.stats_label}>{stat.label}</Text>
-              </View>
-            </>
+            <View style={homeStyle.stats_box} key={stat.label}>
+              <Text style={[homeStyle.stats_nb, { color: stat.color }]}>
+                {numberWithSpace(Math.ceil(stat.amount))} €
+              </Text>
+              <Text style={homeStyle.stats_label}>{stat.label}</Text>
+            </View>
           ))}
         </View>
       </View>
